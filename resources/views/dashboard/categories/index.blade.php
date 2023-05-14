@@ -12,6 +12,9 @@
             @if(session()->has('success'))
                 <div class="alert alert-success"> {{session('success')}} </div>
             @endif
+            @if(session()->has('info'))
+                <div class="alert alert-info"> {{session('info')}} </div>
+            @endif
         </div>
         <div class="card-body">
     <table class="table table-bordered table-striped">
@@ -28,7 +31,7 @@
         <tbody>
         @forelse($categories as $category)
         <tr>
-            <td></td>
+            <td><img src="{{asset('storage/'.$category->image)}}" height="50" alt=""></td>
             <td> {{ $category->id }} </td>
             <td> {{ $category->name }} </td>
             <td> {{ $category->parent_id }} </td>

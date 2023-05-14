@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use SebastianBergmann\Diff\Exception;
 
 class CategoriesController extends Controller
 {
@@ -34,9 +36,7 @@ class CategoriesController extends Controller
     public function store(Request $request)
     {
         //use request merge to add slug value from here not form
-        $request->merge([
-            'slug'=>Str::slug($request->post('name'))
-        ]);
+
        /* $request->input('name');
         $request->post('name');
         $request->get('name');
@@ -62,9 +62,18 @@ class CategoriesController extends Controller
         $category->save();
         */
 
-        $category = Category::create($request->all());
+        $request->validate(Category::rules(),[
+            'required'=>'this field (:attribute) is Required',
+            'name.unique'=>'the category name is already exists'
+        ]);
+        $request->merge([
+            'slug'=>Str::slug($request->post('name'))
+        ]);
+        $data = $request->except('image');
+        $data['image'] = $this->uploadimage($request);
+        $category = Category::create($data);
         // PRG
-        return Redirect::route('categories.index')->with('success','category created');
+        return Redirect::route('dashboard.categories.index')->with('success','category created');
 
     }
 
@@ -81,7 +90,18 @@ class CategoriesController extends Controller
      */
     public function edit(string $id)
     {
-        //
+
+        try {
+            $category = Category::findOrFail($id);
+        }catch (Exception $e){
+            //abort(404);
+            return redirect()->route('dashboard.categories.index')->with('info','this record not found');
+        }
+
+
+        // get all categories expect the category id edited
+        $categories = Category::where('id','!=',$id)->get();
+        return view('dashboard.categories.edit',compact('category','categories'));
     }
 
     /**
@@ -89,7 +109,21 @@ class CategoriesController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate(Category::rules($id));
+        $category = Category::findOrFail($id);
+        $data = $request->except('image');
+        $old_image = $category->image;
+        $new_image = $this->uploadimage($request);
+        if($new_image){
+            $data['image']=$this->uploadimage($request);
+        }
+        if($old_image && $new_image){
+            Storage::disk('public')->delete($old_image);
+        }
+
+        $category->update($data);
+      //  $category->fill($request->all())->save();
+        return Redirect::route('dashboard.categories.index')->with('success','category Updated');
     }
 
     /**
@@ -97,6 +131,27 @@ class CategoriesController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $category = Category::findOrFail($id);
+        $category->delete();
+        if($category->image){
+            Storage::disk('public')->delete($category->image);
+        }
+       // Category::destroy($id);
+       // Category::where('id','=',$id)->delete();
+        return \redirect()->route('dashboard.categories.index')->with('success','Record Deleted');
     }
+    protected function uploadimage(Request $request){
+        if(!$request->hasFile('image')){
+            return;
+        }
+            $file = $request->file('image'); // uploaded file object
+            //$file->getClientOriginalName();
+            //$file->getSize();
+            //$file->getClientOriginalExtension();
+            //$file->getMimeType();
+            $path = $file->store('uploads','public');
+            //$data['image']=$path;
+        return $path;
+        }
+
 }
