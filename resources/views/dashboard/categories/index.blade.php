@@ -9,12 +9,7 @@
     <div class="card">
         <div class="card-header">
             <a href="{{route('dashboard.categories.create')}}" class="btn btn-primary btn-sm"> Add New Category <i class="fa fa-plus"></i> </a>
-            @if(session()->has('success'))
-                <div class="alert alert-success"> {{session('success')}} </div>
-            @endif
-            @if(session()->has('info'))
-                <div class="alert alert-info"> {{session('info')}} </div>
-            @endif
+         <x-alert />
         </div>
         <div class="card-body">
     <table class="table table-bordered table-striped">

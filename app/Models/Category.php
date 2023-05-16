@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Validation\Rule;
 
 class Category extends Model
 {
@@ -14,7 +15,22 @@ class Category extends Model
     protected $guarded = ['id'];
     public static function rules($id = 0){
         return[
-            'name'=>"required|string|min:3|max:255|unique:categories,name,$id",
+            'name'=>[
+                'required',
+                'string',
+                'min:3',
+                'max:255',
+             //   "unique:categories,name,$id",
+              /*  Rule::unique('categories','name')->ignore($id),
+                 function($attribute,$value,$fails){
+            if($value == 'laravel'){
+                $fails('This Value Is Not Avaialble');
+            }
+
+            },*/
+                'filter:laravel,php,sql,html,css,flutter' // this is customer validation rules
+                ],
+
             'parent_id'=>[
                 'nullable','int','exists:categories,id'
             ],

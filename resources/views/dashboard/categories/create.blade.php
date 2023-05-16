@@ -23,12 +23,7 @@
                @csrf
                <div class="form-group">
                    <label for="name"> Name </label>
-                   <input type="text" @class(['form-control','is-invalid'=>$errors->has('name')]) id="name" name="name" value="{{old('name')}}">
-                   @error('name')
-                   <div class="invalid-feedback">
-                       {{$message}}
-                   </div>
-                   @enderror
+                  <x-form.input type="text" name="name" value=""  />
                </div>
                <div class="form-group">
                    <label for="name"> Parent </label>
