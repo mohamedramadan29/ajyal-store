@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('title','Add Category')
+@section('title', 'Add Category')
 @section('breadcrumb')
     @parent
     <li class="breadcrumb-item active"> Add Category </li>
@@ -19,41 +19,41 @@
             @endif
         </div>
         <div class="card-body">
-           <form method="post" action="{{route('dashboard.categories.store')}}" enctype="multipart/form-data">
-               @csrf
-               <div class="form-group">
-                   <label for="name"> Name </label>
-                  <x-form.input type="text" name="name" value=""  />
-               </div>
-               <div class="form-group">
-                   <label for="name"> Parent </label>
-                   <select class="form-control form-select" id="select" name="parent_id">
-                       <option value=""> No Parent </option>
-                       @foreach($categories as $cat)
-                           <option value="{{$cat->id}}" @selected(old('parent_id')) > {{$cat->name}} </option>
-                       @endforeach
-                   </select>
-                   @error('parent_id')
-                   <div class="text-danger"> {{$message}} </div>
-                   @enderror
-               </div>
-               <div class="form-group">
-                   <label for="name"> Description </label>
-                   <textarea class="form-control" id="description" name="description">{{old('description')}}</textarea>
-               </div>
-               <div class="form-group">
-                   <label for="name"> status </label>
-                   <select class="form-control form-select" id="select" name="status">
-                       <option value="active" @selected(old('status'))> Active </option>
-                       <option value="archieve" @selected(old('status'))> archieve </option>
-                   </select>
-               </div>
-               <div class="form-group">
-                   <label for="name"> Image </label>
+            <form method="post" action="{{ route('dashboard.categories.store') }}" enctype="multipart/form-data">
+                @csrf
+                <div class="form-group">
+                    <x-form.label id='name'> Name </x-form.label>
+                    <x-form.input type="text" name="name" value="" />
+                </div>
+                <div class="form-group">
+                    <label for="name"> Parent </label>
+                    <select class="form-control form-select" id="select" name="parent_id">
+                        <option value=""> No Parent </option>
+                        @foreach ($categories as $cat)
+                            <option value="{{ $cat->id }}" @selected(old('parent_id'))> {{ $cat->name }} </option>
+                        @endforeach
+                    </select>
+                    @error('parent_id')
+                        <div class="text-danger"> {{ $message }} </div>
+                    @enderror
+                </div>
+                <div class="form-group">
+                    <label for="name"> Description </label>
+                    <textarea class="form-control" id="description" name="description">{{ old('description') }}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="name"> status </label>
+                    <select class="form-control form-select" id="select" name="status">
+                        <option value="active" @selected(old('status'))> Active </option>
+                        <option value="archieve" @selected(old('status'))> archieve </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="name"> Image </label>
                     <input type="file" class="form-control" name="image" accept="image/*">
-               </div>
-               <button class="btn btn-primary" type="submit"> Add Category <i class="fa fa-plus"></i> </button>
-           </form>
+                </div>
+                <button class="btn btn-primary" type="submit"> Add Category <i class="fa fa-plus"></i> </button>
+            </form>
         </div>
     </div>
 @endsection
