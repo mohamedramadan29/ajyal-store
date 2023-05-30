@@ -22,7 +22,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
    @include('layouts.partials.navbar')
 
-   @include('layouts.partials.sidebar')
+  {{-- @include('layouts.partials.sidebar') --}}
+    <x-nav />
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->

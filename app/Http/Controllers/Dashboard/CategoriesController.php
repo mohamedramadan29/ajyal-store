@@ -17,7 +17,22 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
+
+        $request = request();
+        $query = Category::query();
+        $name = $request->query('name'); /// here use query instead of inut or post to get variable from url
+        $status = $request->query('status');
+        if($name){
+            $query->where('name','LIKE',"%{$name}%");
+        }
+        if($status){
+            $query->where('status','=',$status);
+        }
+        // use filter scope here
+     //   $categories = Category::filter($request->query())->paginate(2);
+     $categories = $query->paginate(10);
+        // use local scope
+      //  $categories = Category::status()->paginate();
         return view('dashboard.categories.index',compact('categories'));
     }
 
@@ -153,5 +168,23 @@ class CategoriesController extends Controller
             //$data['image']=$path;
         return $path;
         }
+
+    public function trash(){
+        $categories = Category::onlyTrashed()->Paginate();
+        return view('dashboard.categories.trash',compact("categories"));
+
+    }
+    public function restore(Request $request, $id){
+        $category = Category::onlyTrashed()->findOrFail($id);
+        $category->restore();
+        return redirect()->route('dashboard.categories.trash')->with('success','category restores success');
+    }
+    public function force_delete($id){
+        $category = Category::onlyTrashed()->findOrFail($id);
+        $category->forceDelete();
+        return redirect()->route('dashboard.categories.trash')->with('success','Category deleted Permentaly');
+
+    }
+
 
 }

@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Validation\Rule;
 
 class Category extends Model
 {
-    use HasFactory;
+    use HasFactory , SoftDeletes;
     // white list
     protected $fillable = ['name','parent_id','slug','description','image','status'];
     // black list
@@ -42,4 +44,25 @@ class Category extends Model
             ],
         ];
     }
+
+    // start use local scope
+
+    public function scopeStatus(Builder $builder){
+        $builder->where('status' ,'=' , 'active');
+    }
+    public function scopeFilter(Builder $builder,$filters){
+        if($filters['name'] ?? false){
+            $builder->where('name','LIKE',"%{$filters['name']}%");
+        }
+        if($filters['status'] ?? false){
+            $builder->where('status','=',$filters['status']);
+        }
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(Category::class, 'parent_id');
+    }
+
+
 }
