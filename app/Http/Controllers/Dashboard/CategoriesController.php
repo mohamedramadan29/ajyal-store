@@ -30,7 +30,10 @@ class CategoriesController extends Controller
         }
         // use filter scope here
      //   $categories = Category::filter($request->query())->paginate(2);
-     $categories = $query->paginate(10);
+     //$categories = $query->withCount('Products')->paginate(10); // return with count
+        $categories=$query->withCount(['products'=>function($query){
+            $query->where('status','=','active');
+        }])->paginate(10); // if need add new condtion if status = active
         // use local scope
       //  $categories = Category::status()->paginate();
         return view('dashboard.categories.index',compact('categories'));
@@ -97,7 +100,8 @@ class CategoriesController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $category = Category::findorFail($id);
+        return view('dashboard.categories.view',compact('category'));
     }
 
     /**

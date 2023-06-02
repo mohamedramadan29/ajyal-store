@@ -29,6 +29,7 @@
             <th>id</th>
             <th>Name</th>
             <th>Parent</th>
+            <th> Product # </th>
             <th> status </th>
             <th>Create At</th>
             <th> Action </th>
@@ -39,15 +40,17 @@
         <tr>
             <td><img src="{{asset('storage/'.$category->image)}}" height="50" alt=""></td>
             <td> {{ $category->id }} </td>
-            <td> {{ $category->name }} </td>
+            <td><a href="{{route('dashboard.categories.show',$category->id)}}"> {{ $category->name }} </a>  </td>
 
             <td>
                 @if ($category->parent)
                     {{$category->parent->name}}
                 @else
-                    No Parent
+                    -
                 @endif
             </td>
+            <!-- here use hasmany (اسم العلاقة products يبقا هيكون اسم ال راجع products_count) -->
+            <td> {{$category->products_count}} </td>
             <td> {{ $category->status  }} </td>
             <td> {{ $category->created_at }} </td>
             <td>
