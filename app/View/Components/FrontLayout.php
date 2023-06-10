@@ -8,12 +8,13 @@ use Illuminate\View\Component;
 
 class FrontLayout extends Component
 {
+    public $title;
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public function __construct($title = null )
     {
-        //
+        $this->title = $title ?? config('app.name');
     }
 
     /**
@@ -21,6 +22,7 @@ class FrontLayout extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.front-layout');
+        // مسئول عن ملف الview ال يتعرض في ملف ال components
+        return view('layouts.front');
     }
 }
