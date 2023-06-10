@@ -28,6 +28,7 @@ Route::group([
         Route::get('products/trash',[ProductController::class,'trash'])->name('products.trash');
         Route::resource('/products',ProductController::class);
         Route::get('profile/edit',[ProfileController::class,'edit'])->name('profile.edit');
+        Route::patch('profile/update',[ProfileController::class,'update'])->name('profile.update');
     });
 
 /*Route::middleware('auth')->as('dashboard.')->prefix('dashboard')->group(function (){

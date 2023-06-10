@@ -35,5 +35,16 @@ class Product extends Model
         return $this->belongsTo(Store::class,'store_id','id');
     }
 
+    public function tags(){
+        $this->belongsToMany(
+            Tag::class, // Related Model
+            'product_tag', // Pivot Table Name
+            "product_id", // Fk in pivot Table for the current Model
+            "tag_id", // Fk in Pivot Table Fot The Related Model
+            "id", // Pk for the current Model
+            "id" // Pk for the Related Model
+        );
+    }
+
 
 }
