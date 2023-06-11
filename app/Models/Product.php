@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class Product extends Model
 {
-    use HasFactory , SoftDeletes;
+    use HasFactory, SoftDeletes;
     protected $guarded = ['id'];
 
 
@@ -18,24 +18,25 @@ class Product extends Model
 
     protected static function booted()
     {
-        static::addGlobalScope('store',function (Builder $builder){
+        static::addGlobalScope('store', function (Builder $builder) {
             $user = Auth::user();
-            if($user->store_id){
-                $builder->where('store_id','=',$user->store_id);
+            if ($user && $user->store_id) {
+                $builder->where('store_id', '=', $user->store_id);
             }
-
         });
     }
 
     public function Category()
     {
-        return $this->belongsTo(Category::class, 'category_id','id');
+        return $this->belongsTo(Category::class, 'category_id', 'id');
     }
-    public function Store(){
-        return $this->belongsTo(Store::class,'store_id','id');
+    public function Store()
+    {
+        return $this->belongsTo(Store::class, 'store_id', 'id');
     }
 
-    public function tags(){
+    public function tags()
+    {
         $this->belongsToMany(
             Tag::class, // Related Model
             'product_tag', // Pivot Table Name
@@ -46,5 +47,9 @@ class Product extends Model
         );
     }
 
-
+    // define local scope active to get active product only
+    public function scopeActive(Builder $builder)
+    {
+        $builder->where('status', '=', 'active');
+    }
 }
