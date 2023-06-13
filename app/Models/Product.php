@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
@@ -51,5 +52,29 @@ class Product extends Model
     public function scopeActive(Builder $builder)
     {
         $builder->where('status', '=', 'active');
+    }
+    // Make Accessors // ممكن تعمل اي شي هنا وترجعه عادى كانة عمود في الداتا بيز 
+    /**
+     * والتعريف بتاعه دائما بيكون كدا 
+     * get وهنا الاسم Attribute (getImgaeUrlAttribute)
+     */
+    public function getImageUrlAttribute()
+    {
+        if (!$this->image) {
+            return "default image here ";
+        }
+        if (Str::startsWith($this->image, ['https://', 'https://'])) {
+            return $this->image;
+        }
+        return asset('storage/' . $this->image);
+    }
+
+    // to get sale value
+
+    public function getSalePercentAttribute(){
+        if(! $this->compare_price){
+            return ;
+        }
+        return number_format( 100 - (100 * $this->price / $this->compare_price),1);
     }
 }

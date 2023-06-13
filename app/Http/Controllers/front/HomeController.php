@@ -10,7 +10,7 @@ class HomeController extends Controller
 {
     public function index(){
         // use here use active as inner scope in product model
-        $products = Product::active()->limit(8)->get();
+        $products = Product::with('category')->active()->limit(8)->get();
         return view('front.home',compact('products'));
     }
 }
