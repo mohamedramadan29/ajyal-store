@@ -12,6 +12,7 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        //
+        // هنا بستسني اي request او طلب مش محتاج يشتغل معاه csrf token
+        // زي مثلا الباي بال 
     ];
 }

@@ -4,6 +4,7 @@ use App\Http\Controllers\Dashboard\CategoriesController;
 use App\Http\Controllers\Dashboard\ProductController;
 use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Middleware\CheckUserType;
 //use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 /*
@@ -14,7 +15,7 @@ Route::middleware('auth')->group(function () {
 });
 */
 Route::group([
-    'middleware'=>'auth',
+    'middleware'=>['auth',CheckUserType::class],
     'prefix'=>'dashboard',   // // شكل الرابط في ال url في البداية
     'as'=>'dashboard.' // دا هيكون اسم الراوت name (dashboard.categories.create)
 ],
