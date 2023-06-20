@@ -27,4 +27,17 @@ class Cart extends Model
             $cart->id = Str::uuid();
         });
     }
+
+    // make relations
+
+    public function user(){
+        return $this->belongsTo(User::class)->withDefault([
+            'name' => 'anymous',
+        ]);
+    }
+
+    public function product(){
+        return $this->belongsTo(Product::class);
+    }
+
 }
